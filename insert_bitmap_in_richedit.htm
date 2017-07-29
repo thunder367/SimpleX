@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Ishodnik.Ru-Сайт профессионального программиста!</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+
+
+</head>
+
+<body topmargin="0" leftmargin="0" marginwidth="0" marginheigth="0" bgcolor=white>
+<div align="center"><center>
+
+<table width="680" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><hr>
+    <h3>Вставляем битмап в RichEdit или RichTextBox.</h3>
+    <p>Компилятор: Delphi 4.x (или выше)</p>
+    <p>Ниже представлен пример, который можно применить к RxRichEdit, 
+    RichEditEx, RichEdit98, и Microsoft RichTextBox (поставляемый с VB5+) не 
+    прибегая к использованию буфера обмена или OLE:<br>
+    <br>
+    function BitmapToRTF(pict: TBitmap): string;<br>
+    var<br>
+    &nbsp;&nbsp;bi,bb,rtf: string;<br>
+    &nbsp;&nbsp;bis,bbs: Cardinal;<br>
+    &nbsp;&nbsp;achar: ShortString;<br>
+    &nbsp;&nbsp;hexpict: string;<br>
+    &nbsp;&nbsp;I: Integer;<br>
+    begin<br>
+    &nbsp;&nbsp;GetDIBSizes(pict.Handle,bis,bbs);<br>
+    &nbsp;&nbsp;SetLength(bi,bis);<br>
+    &nbsp;&nbsp;SetLength(bb,bbs);<br>
+    &nbsp;&nbsp;GetDIB(pict.Handle,pict.Palette,PChar(bi)^,PChar(bb)^);<br>
+    &nbsp;&nbsp;rtf := '{\rtf1 {\pict\dibitmap ';<br>
+    &nbsp;&nbsp;SetLength(hexpict,(Length(bb) + Length(bi)) * 2);<br>
+    &nbsp;&nbsp;I := 2;<br>
+    &nbsp;&nbsp;for bis := 1 to Length(bi) do<br>
+    &nbsp;&nbsp;begin<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;achar := Format('%x',[Integer(bi[bis])]);<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;if Length(achar) = 1 then<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;achar := '0' + achar;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;hexpict[I-1] := achar[1];<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;hexpict[I] := achar[2];<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Inc(I,2);<br>
+    &nbsp;&nbsp;end;<br>
+    &nbsp;&nbsp;for bbs := 1 to Length(bb) do<br>
+    &nbsp;&nbsp;begin<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;achar := Format('%x',[Integer(bb[bbs])]);<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;if Length(achar) = 1 then<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;achar := '0' + achar;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;hexpict[I-1] := achar[1];<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;hexpict[I] := achar[2];<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Inc(I,2);<br>
+    &nbsp;&nbsp;end;<br>
+    &nbsp;&nbsp;rtf := rtf + hexpict + ' }}';<br>
+    &nbsp;&nbsp;Result := rtf;<br>
+    end;<br>
+    <br>
+    А вот пример использования этой функции:<br>
+    <br>
+    {SS это TStringStream, RE это TRxRichEdit, а BMP это TBitmap содержащий 
+    картинку.}<br>
+    SS := TStringStream.Create(BitmapToRTF(BMP));<br>
+    RE.PlainText := False;<br>
+    RE.StreamMode := [smSelection];<br>
+    RE.Lines.LoadFromStream(SS);<br>
+    SS.Free;<br>
+    <br>
+&nbsp;</p>
+    <p> <br>
+    &nbsp; <br>
+    &nbsp; </td>
+  </tr>
+</table>
+</center></div>
+<hr>
+</body>
+</html>
